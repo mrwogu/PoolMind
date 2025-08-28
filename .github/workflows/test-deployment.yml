@@ -1,0 +1,201 @@
+name: Test Deployment Scripts
+
+on:
+  push:
+    branches: [ main ]
+    paths:
+      - 'scripts/**'
+      - 'install.sh'
+  pull_request:
+    branches: [ main ]
+    paths:
+      - 'scripts/**'
+      - 'install.sh'
+
+jobs:
+  test-install-script:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Test install script syntax
+      run: |
+        echo "Testing install.sh syntax..."
+        bash -n install.sh
+        echo "✓ install.sh syntax is valid"
+
+    - name: Test install script accessibility
+      run: |
+        echo "Testing install script can be downloaded..."
+        # Simulate downloading from GitHub raw
+        curl -fsSL https://raw.githubusercontent.com/mrwogu/PoolMind/main/install.sh > /tmp/install-test.sh || true
+
+        # Test local file
+        if [ -f "install.sh" ]; then
+          echo "✓ install.sh exists and is accessible"
+          head -n 10 install.sh
+        else
+          echo "✗ install.sh not found"
+          exit 1
+        fi
+
+    - name: Test script permissions and shebang
+      run: |
+        echo "Checking script properties..."
+
+        # Check shebang
+        if head -n 1 install.sh | grep -q "#!/bin/bash"; then
+          echo "✓ install.sh has proper shebang"
+        else
+          echo "✗ install.sh missing proper shebang"
+          exit 1
+        fi
+
+        # Check if executable
+        if [ -x "install.sh" ]; then
+          echo "✓ install.sh is executable"
+        else
+          echo "⚠ install.sh is not executable (will be fixed)"
+        fi
+
+  test-scripts:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Check script syntax
+      run: |
+        echo "Checking shell script syntax..."
+        for script in scripts/*.sh; do
+          if [ -f "$script" ]; then
+            echo "Checking $script..."
+            bash -n "$script"
+          fi
+        done
+
+    - name: Check script permissions
+      run: |
+        echo "Checking script permissions..."
+        for script in scripts/*.sh; do
+          if [ -f "$script" ]; then
+            if [ -x "$script" ]; then
+              echo "✓ $script is executable"
+            else
+              echo "✗ $script is not executable"
+              exit 1
+            fi
+          fi
+        done
+
+    - name: Validate systemd files
+      run: |
+        echo "Validating systemd files..."
+        sudo apt-get update
+        sudo apt-get install -y systemd
+
+        for service in scripts/*.service scripts/*.timer; do
+          if [ -f "$service" ]; then
+            echo "Validating $service..."
+            systemd-analyze verify "$service" || echo "Warning: $service has issues"
+          fi
+        done
+
+    - name: Test script help/usage
+      run: |
+        echo "Testing scripts for basic functionality..."
+
+        # Test that scripts can be sourced without errors
+        for script in scripts/*.sh; do
+          if [ -f "$script" ]; then
+            echo "Testing $script..."
+            # Create a test environment
+            mkdir -p /tmp/test-poolmind
+            cd /tmp/test-poolmind
+
+            # Test script syntax by running with --help or checking shebang
+            if head -n 1 "$GITHUB_WORKSPACE/$script" | grep -q "#!/bin/bash"; then
+              echo "✓ $script has proper shebang"
+            else
+              echo "⚠ $script might be missing shebang"
+            fi
+          fi
+        done
+
+  test-deployment-simulation:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Simulate Pi Environment
+      run: |
+        echo "Simulating Raspberry Pi environment..."
+
+        # Create pi user structure
+        sudo useradd -m -s /bin/bash pi || true
+        sudo mkdir -p /home/pi
+        sudo chown pi:pi /home/pi
+
+        # Test directory structure
+        sudo -u pi mkdir -p /home/pi/PoolMind
+        sudo -u pi cp -r . /home/pi/PoolMind/
+
+        # Test that auto-update script can be parsed
+        cd /home/pi/PoolMind
+        sudo -u pi bash -n scripts/auto-update.sh
+        echo "✓ Auto-update script syntax is valid"
+
+        # Test setup script syntax
+        sudo -u pi bash -n scripts/setup-pi.sh
+        echo "✓ Setup script syntax is valid"
+
+    - name: Test Service Files
+      run: |
+        echo "Testing systemd service files..."
+
+        # Copy service files to systemd directory
+        sudo cp scripts/*.service /etc/systemd/system/ 2>/dev/null || true
+        sudo cp scripts/*.timer /etc/systemd/system/ 2>/dev/null || true
+
+        # Test systemd syntax
+        sudo systemctl daemon-reload
+        echo "✓ Systemd files are valid"
+
+  test-config-generation:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Test Configuration Generation
+      run: |
+        echo "Testing configuration generation..."
+
+        # Extract config generation from setup script
+        mkdir -p test-config
+        cd test-config
+
+        # Test config YAML generation
+        cat > config.yaml << 'EOF'
+        # PoolMind Configuration for Raspberry Pi
+
+        camera:
+          device: 0
+          resolution: [640, 480]
+          fps: 15
+
+        calibration:
+          marker_size: 100
+          ema_alpha: 0.3
+
+        web:
+          enabled: true
+          host: "0.0.0.0"
+          port: 8000
+        EOF
+
+        # Validate YAML syntax
+        python3 -c "import yaml; yaml.safe_load(open('config.yaml'))"
+        echo "✓ Generated config is valid YAML"

@@ -1,0 +1,281 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": [
+    "config:recommended",
+    "docker:enableMajor",
+    "schedule:weeklyNonOfficeHours",
+    ":dependencyDashboard",
+    ":semanticCommits",
+    ":automergeDigest",
+    ":automergeMinor",
+    "security:openssf-scorecard"
+  ],
+  "assignees": ["@me"],
+  "reviewers": ["@me"],
+  "labels": ["dependencies", "renovate"],
+  "timezone": "Europe/Warsaw",
+  "prHourlyLimit": 3,
+  "prConcurrentLimit": 8,
+  "commitMessagePrefix": "⬆️ ",
+  "commitMessageAction": "Update",
+  "commitMessageTopic": "{{depName}}",
+  "separateMajorMinor": true,
+  "separateMinorPatch": false,
+  "separateMultipleMajor": true,
+  "rangeStrategy": "bump",
+  "bumpVersion": "patch",
+  "lockFileMaintenance": {
+    "enabled": true,
+    "schedule": ["before 4am on monday"],
+    "automerge": true,
+    "automergeType": "branch"
+  },
+  "packageRules": [
+    {
+      "description": "Critical security vulnerabilities - immediate update",
+      "matchDatasources": ["pypi"],
+      "vulnerabilityAlerts": {
+        "enabled": true
+      },
+      "labels": ["security", "critical"],
+      "prPriority": 10,
+      "schedule": ["at any time"],
+      "automerge": false
+    },
+    {
+      "description": "Computer vision and ML dependencies - group updates",
+      "matchPackageNames": [
+        "numpy",
+        "opencv-python",
+        "opencv-contrib-python",
+        "imutils",
+        "scikit-learn",
+        "scipy",
+        "tensorflow",
+        "torch",
+        "torchvision"
+      ],
+      "groupName": "Computer Vision & ML",
+      "schedule": ["before 4am on monday"],
+      "automerge": false,
+      "labels": ["computer-vision", "ml"],
+      "reviewersFromCodeOwners": true,
+      "minimumReleaseAge": "7 days"
+    },
+    {
+      "description": "Web framework dependencies",
+      "matchPackageNames": ["fastapi", "uvicorn", "starlette", "pydantic"],
+      "groupName": "Web Framework",
+      "schedule": ["before 4am on monday"],
+      "automerge": false,
+      "labels": ["web-framework"],
+      "minimumReleaseAge": "3 days"
+    },
+    {
+      "description": "Development and testing tools",
+      "matchFileNames": ["requirements-dev.txt"],
+      "groupName": "Development Tools",
+      "schedule": ["before 4am on monday"],
+      "automerge": true,
+      "automergeType": "pr",
+      "labels": ["dev-tools"]
+    },
+    {
+      "description": "Code quality and formatting tools",
+      "matchPackageNames": [
+        "black",
+        "flake8",
+        "mypy",
+        "isort",
+        "pre-commit",
+        "bandit",
+        "safety"
+      ],
+      "groupName": "Code Quality Tools",
+      "automerge": true,
+      "automergeType": "pr",
+      "labels": ["code-quality"],
+      "schedule": ["before 4am on monday"]
+    },
+    {
+      "description": "Testing framework updates",
+      "matchPackageNames": [
+        "pytest",
+        "pytest-cov",
+        "pytest-mock",
+        "factory-boy",
+        "freezegun",
+        "responses"
+      ],
+      "groupName": "Testing Framework",
+      "automerge": true,
+      "automergeType": "pr",
+      "labels": ["testing"],
+      "schedule": ["before 4am on monday"]
+    },
+    {
+      "description": "Documentation tools",
+      "matchPackageNames": [
+        "mkdocs",
+        "mkdocs-material",
+        "mkdocs-mermaid2-plugin"
+      ],
+      "groupName": "Documentation Tools",
+      "automerge": true,
+      "automergeType": "pr",
+      "labels": ["documentation"],
+      "schedule": ["before 4am on monday"]
+    },
+    {
+      "description": "Python base Docker images",
+      "matchDatasources": ["docker"],
+      "matchPackageNames": ["python"],
+      "groupName": "Python Docker Images",
+      "schedule": ["before 4am on the first day of the month"],
+      "labels": ["docker", "python"],
+      "minimumReleaseAge": "7 days"
+    },
+    {
+      "description": "GitHub Actions - auto-merge minor updates",
+      "matchManagers": ["github-actions"],
+      "matchUpdateTypes": ["minor", "patch"],
+      "groupName": "GitHub Actions",
+      "automerge": true,
+      "automergeType": "pr",
+      "labels": ["github-actions"],
+      "schedule": ["before 4am on monday"]
+    },
+    {
+      "description": "Pre-commit hooks updates",
+      "matchManagers": ["pre-commit"],
+      "groupName": "Pre-commit Hooks",
+      "automerge": true,
+      "automergeType": "pr",
+      "labels": ["pre-commit"],
+      "schedule": ["before 4am on monday"]
+    },
+    {
+      "description": "Major version updates - manual review required",
+      "matchUpdateTypes": ["major"],
+      "labels": ["major-update", "breaking-change"],
+      "prPriority": -5,
+      "schedule": ["before 4am on the first day of the month"],
+      "automerge": false,
+      "minimumReleaseAge": "14 days"
+    },
+    {
+      "description": "Raspberry Pi specific packages - careful handling",
+      "matchPackageNames": [
+        "opencv-python",
+        "opencv-contrib-python",
+        "numpy"
+      ],
+      "automerge": false,
+      "labels": ["raspberry-pi", "hardware-specific"],
+      "reviewersFromCodeOwners": true,
+      "minimumReleaseAge": "14 days",
+      "prBodyNotes": [
+        "⚠️ **Raspberry Pi Compatibility**: This update may affect hardware compatibility.",
+        "Please test thoroughly on target hardware before merging."
+      ]
+    },
+    {
+      "description": "Pin Docker image digests for security",
+      "matchDatasources": ["docker"],
+      "pinDigests": true,
+      "labels": ["docker", "security"]
+    }
+  ],
+  "python": {
+    "enabled": true,
+    "registryUrls": ["https://pypi.org/pypi/"]
+  },
+  "docker": {
+    "enabled": true,
+    "pinDigests": true
+  },
+  "pip_requirements": {
+    "enabled": true,
+    "fileMatch": [
+      "(^|/)requirements.*\\.txt$",
+      "(^|/)requirements.*\\.in$"
+    ]
+  },
+  "github-actions": {
+    "enabled": true,
+    "fileMatch": ["^\\.github/workflows/[^/]+\\.ya?ml$"]
+  },
+  "dockerfile": {
+    "enabled": true
+  },
+  "docker-compose": {
+    "enabled": true
+  },
+  "pre-commit": {
+    "enabled": true
+  },
+  "vulnerabilityAlerts": {
+    "enabled": true,
+    "schedule": ["at any time"],
+    "labels": ["security", "vulnerability"],
+    "reviewersFromCodeOwners": true,
+    "automerge": false,
+    "prCreation": "immediate"
+  },
+  "osvVulnerabilityAlerts": true,
+  "stabilityDays": 3,
+  "internalChecksFilter": "strict",
+  "dependencyDashboard": true,
+  "dependencyDashboardTitle": "🎱 PoolMind - Renovate Dashboard",
+  "dependencyDashboardHeader": "This issue lists Renovate updates and detected dependencies for the PoolMind project. Read the [Dependency Dashboard](https://docs.renovatebot.com/key-concepts/dashboard/) docs to learn more.\n\n## 🔍 Project-Specific Notes\n- **Computer Vision**: OpenCV and NumPy updates require hardware testing on Raspberry Pi\n- **Web Framework**: FastAPI updates should be tested with the pool tracking API\n- **Security**: Critical vulnerabilities are updated immediately",
+  "dependencyDashboardFooter": "Configure Renovate by editing `renovate.json` in the repository root.\n\n---\n🎱 *Automated dependency management for the PoolMind project*",
+  "suppressNotifications": ["prIgnoreNotification"],
+  "rebaseWhen": "conflicted",
+  "includeForks": false,
+  "forkProcessing": "disabled",
+  "baseBranches": ["main"],
+  "ignorePaths": [
+    "**/node_modules/**",
+    "**/bower_components/**",
+    "**/vendor/**",
+    "**/examples/**",
+    "**/test/**",
+    "**/tests/**",
+    "**/__tests__/**",
+    "**/recordings/**",
+    "**/markers/**",
+    "**/__pycache__/**",
+    "**/*.pyc"
+  ],
+  "ignorePresets": [
+    ":ignoreModulesAndTests"
+  ],
+  "enabledManagers": [
+    "pip_requirements",
+    "dockerfile",
+    "docker-compose",
+    "github-actions",
+    "pre-commit"
+  ],
+  "customManagers": [
+    {
+      "customType": "regex",
+      "description": "Update Python version in Dockerfile",
+      "fileMatch": ["^Dockerfile$"],
+      "matchStrings": ["FROM python:(?<currentValue>[0-9.]+)-(?<currentDigest>\\w+)"],
+      "datasourceTemplate": "docker",
+      "depNameTemplate": "python",
+      "versioningTemplate": "docker"
+    }
+  ],
+  "regexManagers": [
+    {
+      "description": "Update Python version in pyproject.toml",
+      "fileMatch": ["^pyproject\\.toml$"],
+      "matchStrings": ["requires-python = \">=(?<currentValue>[0-9.]+)\""],
+      "datasourceTemplate": "github-releases",
+      "depNameTemplate": "python/cpython",
+      "extractVersionTemplate": "^v(?<version>.*)$"
+    }
+  ]
+}

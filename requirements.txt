@@ -1,0 +1,14 @@
+# NOTE: We rely on system OpenCV on Raspberry Pi (python3-opencv via apt).
+# If you need pip OpenCV (heavier build), uncomment one of the lines below:
+# opencv-python==4.8.0.76
+# opencv-contrib-python==4.8.0.76
+
+fastapi==0.112.2
+imutils==0.5.4
+jinja2==3.1.2
+numpy==1.26.4
+pillow==10.4.0
+python-multipart==0.0.9
+PyYAML==6.0.2
+reportlab==4.2.2
+uvicorn==0.30.6

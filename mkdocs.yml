@@ -1,0 +1,89 @@
+site_name: PoolMind Documentation
+site_description: Open-source computer vision system for pool games
+site_author: Project Contributors
+site_url: https://mrwogu.github.io/PoolMind
+
+repo_name: PoolMind
+repo_url: https://github.com/mrwogu/PoolMind
+
+nav:
+  - Home: index.md
+  - Getting Started:
+    - Quick Start: QUICKSTART.md
+  - User Guide:
+    - Configuration: CONFIGURATION.md
+    - Calibration: CALIBRATION.md
+    - Web Interface: WEB.md
+  - Developer Guide:
+    - Architecture: ARCHITECTURE.md
+    - Frontend: FRONTEND.md
+  - Reference:
+    - ArUco Markers: MARKERS.md
+    - Renovate Config: RENOVATE.md
+
+theme:
+  name: material
+  palette:
+    - scheme: default
+      primary: green
+      accent: orange
+      toggle:
+        icon: material/brightness-7
+        name: Switch to dark mode
+    - scheme: slate
+      primary: green
+      accent: orange
+      toggle:
+        icon: material/brightness-4
+        name: Switch to light mode
+  features:
+    - navigation.tabs
+    - navigation.sections
+    - navigation.expand
+    - navigation.path
+    - navigation.top
+    - search.highlight
+    - search.share
+    - content.code.copy
+    - content.code.annotate
+
+plugins:
+  - search
+  - mermaid2
+
+markdown_extensions:
+  - admonition
+  - pymdownx.details
+  - pymdownx.superfences:
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:mermaid2.fence_mermaid
+  - pymdownx.highlight:
+      anchor_linenums: true
+  - pymdownx.inlinehilite
+  - pymdownx.snippets
+  - pymdownx.tabbed:
+      alternate_style: true
+  - pymdownx.tasklist:
+      custom_checkbox: true
+  - attr_list
+  - md_in_html
+  - tables
+  - footnotes
+
+extra:
+  social:
+    - icon: fontawesome/brands/github
+      link: https://github.com/mrwogu/PoolMind
+    - icon: fontawesome/brands/python
+      link: https://pypi.org/project/poolmind/
+
+extra_css:
+  - stylesheets/extra.css
+
+copyright: Copyright &copy; 2025 PoolMind Contributors
+
+# Exclude files from documentation build
+exclude_docs: |
+  README.md

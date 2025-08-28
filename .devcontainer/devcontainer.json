@@ -1,0 +1,90 @@
+{
+  "name": "PoolMind Development",
+  "build": {
+    "dockerfile": "../Dockerfile",
+    "target": "development",
+    "context": ".."
+  },
+  "runArgs": [
+    "--privileged",
+    "--device=/dev/video0:/dev/video0"
+  ],
+  "mounts": [
+    "source=${localWorkspaceFolder},target=/app,type=bind,consistency=cached"
+  ],
+  "containerEnv": {
+    "PYTHONPATH": "/app/src",
+    "ENVIRONMENT": "development"
+  },
+  "features": {
+    "ghcr.io/devcontainers/features/git:1": {},
+    "ghcr.io/devcontainers/features/github-cli:1": {}
+  },
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "ms-python.python",
+        "ms-python.vscode-pylance",
+        "ms-python.black-formatter",
+        "ms-python.flake8",
+        "ms-python.mypy-type-checker",
+        "ms-vscode.test-adapter-converter",
+        "littlefoxteam.vscode-python-test-adapter",
+        "njpwerner.autodocstring",
+        "visualstudioexptteam.vscodeintellicode",
+        "ms-vscode.vscode-json",
+        "redhat.vscode-yaml",
+        "ms-vscode.makefile-tools",
+        "eamodio.gitlens",
+        "github.vscode-pull-request-github",
+        "ms-vsliveshare.vsliveshare"
+      ],
+      "settings": {
+        "python.defaultInterpreterPath": "/usr/local/bin/python",
+        "python.terminal.activateEnvironment": false,
+        "python.testing.pytestEnabled": true,
+        "python.testing.pytestArgs": [
+          "tests"
+        ],
+        "python.linting.enabled": true,
+        "python.linting.flake8Enabled": true,
+        "python.linting.mypyEnabled": true,
+        "python.formatting.provider": "black",
+        "python.formatting.blackArgs": [
+          "--line-length=88"
+        ],
+        "python.sortImports.args": [
+          "--profile=black"
+        ],
+        "editor.formatOnSave": true,
+        "editor.codeActionsOnSave": {
+          "source.organizeImports": "explicit"
+        },
+        "files.exclude": {
+          "**/__pycache__": true,
+          "**/*.pyc": true,
+          ".pytest_cache": true,
+          ".mypy_cache": true,
+          ".coverage": true,
+          "htmlcov": true
+        },
+        "terminal.integrated.defaultProfile.linux": "bash"
+      }
+    }
+  },
+  "forwardPorts": [8000, 8001],
+  "portsAttributes": {
+    "8000": {
+      "label": "PoolMind Web",
+      "onAutoForward": "notify"
+    },
+    "8001": {
+      "label": "Development Server",
+      "onAutoForward": "silent"
+    }
+  },
+  "postCreateCommand": "pip install -r requirements-dev.txt && pre-commit install",
+  "postStartCommand": "echo 'DevContainer ready! Run: python -m uvicorn poolmind.web.server:app --host 0.0.0.0 --port 8000 --reload'",
+  "remoteUser": "poolmind",
+  "workspaceFolder": "/app"
+}

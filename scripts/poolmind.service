@@ -1,0 +1,25 @@
+[Unit]
+Description=PoolMind - AI Pool Assistant
+After=network.target
+Wants=network.target
+
+[Service]
+Type=simple
+User=pi
+Group=pi
+WorkingDirectory=/home/pi/PoolMind
+Environment=PYTHONPATH=/home/pi/PoolMind/src
+ExecStart=/home/pi/PoolMind/.venv/bin/python -m poolmind.app --config /home/pi/PoolMind/config/config.yaml
+Restart=always
+RestartSec=10
+StandardOutput=journal
+StandardError=journal
+
+# Security settings
+NoNewPrivileges=true
+ProtectSystem=strict
+ProtectHome=true
+ReadWritePaths=/home/pi/PoolMind
+
+[Install]
+WantedBy=multi-user.target

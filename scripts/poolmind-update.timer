@@ -1,0 +1,10 @@
+[Unit]
+Description=PoolMind Auto-Update Timer
+Requires=poolmind-update.service
+
+[Timer]
+OnCalendar=*:0/30  # Run every 30 minutes
+Persistent=true
+
+[Install]
+WantedBy=timers.target

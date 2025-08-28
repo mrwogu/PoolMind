@@ -1,0 +1,24 @@
+# <type>[optional scope]: <description>
+#
+# [optional body]
+#
+# [optional footer(s)]
+#
+# Types:
+# feat:     nowa funkcjonalność dla użytkownika
+# fix:      naprawa błędu dla użytkownika
+# docs:     zmiany w dokumentacji
+# style:    formatowanie kodu (bez zmian w logice)
+# refactor: refaktoryzacja kodu (bez nowych funkcji czy napraw)
+# test:     dodanie lub modyfikacja testów
+# chore:    aktualizacja zależności, konfiguracji, narzędzi
+# perf:     poprawa wydajności
+# ci:       zmiany w CI/CD pipeline
+# build:    zmiany w systemie buildowania
+# revert:   cofnięcie poprzednich zmian
+#
+# Examples:
+# feat: add real-time ball trajectory prediction
+# fix: resolve camera initialization timeout on Pi 4
+# docs: update ArUco marker calibration guide
+# refactor: extract color detection into separate module

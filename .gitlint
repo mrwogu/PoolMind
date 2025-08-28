@@ -1,0 +1,31 @@
+[general]
+# Ignore merge commits
+ignore=merge
+
+# Use search semantics for regex
+regex-style-search=true
+
+# Configuration for conventional commits
+contrib=contrib-title-conventional-commits
+
+# Specify allowed types for conventional commits
+[contrib-title-conventional-commits]
+types = feat,fix,docs,style,refactor,test,chore,perf,ci,build,revert
+
+[title-max-length]
+line-length=72
+
+[title-min-length]
+min-length=10
+
+# Allow commits without body for conventional commits
+[body-min-length]
+min-length=0
+
+[body-max-line-length]
+line-length=72
+
+# Disable body-min-length rule entirely for conventional commits
+[ignore-by-title]
+regex=(feat|fix|docs|style|refactor|test|chore|perf|ci|build|revert)(\(.+\))?: .+
+ignore=B6

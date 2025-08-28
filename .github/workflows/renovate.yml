@@ -1,0 +1,49 @@
+name: Validate Renovate Configuration
+
+on:
+  push:
+    paths:
+      - 'renovate.json'
+      - '.renovaterc.json'
+      - '.github/renovate.json'
+  pull_request:
+    paths:
+      - 'renovate.json'
+      - '.renovaterc.json'
+      - '.github/renovate.json'
+
+jobs:
+  validate:
+    name: Validate Renovate Config
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install Renovate
+        run: npm install -g renovate
+
+      - name: Validate main config
+        run: renovate-config-validator renovate.json
+
+      - name: Validate local config
+        run: renovate-config-validator .renovaterc.json
+        if: hashFiles('.renovaterc.json') != ''
+
+      - name: Validate GitHub org config
+        run: renovate-config-validator .github/renovate.json
+        if: hashFiles('.github/renovate.json') != ''
+
+      - name: Test dry-run
+        run: |
+          echo "Testing Renovate dry-run..."
+          # Note: This would require GITHUB_TOKEN in real usage
+          # renovate --dry-run --log-level debug
+        env:
+          LOG_LEVEL: debug

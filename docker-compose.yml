@@ -1,0 +1,58 @@
+version: '3.8'
+
+services:
+  poolmind:
+    build:
+      context: .
+      target: production
+    container_name: poolmind
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./config:/app/config:ro
+      - ./recordings:/app/recordings
+      - ./markers:/app/markers:ro
+      - /dev:/dev
+    devices:
+      - /dev/video0:/dev/video0
+    privileged: true
+    environment:
+      - PYTHONPATH=/app/src
+      - ENVIRONMENT=production
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+  poolmind-dev:
+    build:
+      context: .
+      target: development
+    container_name: poolmind-dev
+    ports:
+      - "8000:8000"
+      - "8001:8001"  # Additional port for development
+    volumes:
+      - .:/app
+      - /dev:/dev
+    devices:
+      - /dev/video0:/dev/video0
+    privileged: true
+    environment:
+      - PYTHONPATH=/app/src
+      - ENVIRONMENT=development
+    command: >
+      python -m uvicorn poolmind.web.server:app 
+      --host 0.0.0.0 
+      --port 8000 
+      --reload 
+      --log-level debug
+    profiles:
+      - dev
+
+networks:
+  default:
+    name: poolmind-network

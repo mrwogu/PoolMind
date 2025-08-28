@@ -1,0 +1,63 @@
+# Global configuration
+camera:
+  index: 0            # /dev/video0
+  width: 1280
+  height: 720
+  fps: 30
+
+calibration:
+  # ArUco IDs placed at the table corners, clockwise from top-left
+  corner_ids: [0, 1, 2, 3]
+  # smoothing for homography (0.0 - 1.0); higher = smoother but slower to react
+  ema_alpha: 0.2
+  # expected physical table size in 'table units' (arbitrary, e.g. pixels after warp)
+  # canonical coordinates after warp (0,0) top-left to (table_w, table_h) bottom-right
+  table_w: 2000
+  table_h: 1000
+  # margin (in canonical space) to define pocket zones, etc.
+  margin: 30
+
+detection:
+  hsv_green_lower: [35, 30, 30]   # Adjust to your cloth color
+  hsv_green_upper: [85, 255, 255]
+  # HoughCircles params for warped (bird's-eye) view
+  hough_dp: 1.2
+  hough_min_dist: 16
+  hough_param1: 120
+  hough_param2: 18
+  ball_min_radius: 8
+  ball_max_radius: 18
+
+tracking:
+  max_disappeared: 8
+  max_distance: 40
+
+ui:
+  fullscreen: true
+  show_fps: true
+  draw_ids: true
+  draw_trails: true
+
+replay:
+  enabled: true
+  diff_threshold: 18.0
+  cooldown_frames: 60
+  clip_seconds: 12
+  output_dir: "replays"
+
+web:
+  enabled: true
+  host: 0.0.0.0
+  port: 8000
+
+game:
+  # Pocket detection settings
+  pocket_radius: 36
+  disappear_for_pot: 6
+  # Ball colors for 8-ball (HSV ranges, will be added later)
+  ball_colors:
+    cue: [[0, 0, 200], [180, 30, 255]]     # white ball
+    solid: [[0, 50, 50], [30, 255, 255]]   # example for red/yellow solids
+    stripe: [[100, 50, 50], [130, 255, 255]] # example for blue stripes
+  port: 8000
+  mjpeg_fps: 10

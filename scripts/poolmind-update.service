@@ -1,0 +1,14 @@
+[Unit]
+Description=PoolMind Auto-Update Service
+After=network.target
+
+[Service]
+Type=oneshot
+User=pi
+WorkingDirectory=/home/pi/PoolMind
+ExecStart=/home/pi/PoolMind/scripts/auto-update.sh
+StandardOutput=journal
+StandardError=journal
+
+[Install]
+WantedBy=multi-user.target

@@ -1,52 +1,78 @@
-# 🎮 Demo Scripts
+# 🎮 PoolMind Demo Scripts - Physics Simulation Suite
 
-Interactive demonstrations and simulations for testing PoolMind without physical hardware.
+Interactive demonstrations and simulations for testing PoolMind with advanced physics simulation.
 
-## 📋 Scripts Overview
+## 📋 Physics Simulation Scripts
 
-| Script | Purpose | Hardware Required | Complexity |
-|--------|---------|-------------------|------------|
-| [`demo.py`](demo.py) | **Main demo** | None | Full pipeline |
-| [`simple_demo.py`](simple_demo.py) | **Simplified demo** | None | Basic CV only |
-| [`virtual_table.py`](virtual_table.py) | **Virtual table generator** | None | Synthetic frames |
-| [`full_simulation.py`](full_simulation.py) | **Complete simulation** | None | Game engine + AI |
+| Script | Purpose | Features | Hardware Required |
+|--------|---------|----------|-------------------|
+| [`physics_simulator.py`](physics_simulator.py) | **Advanced Physics** | Full ball physics, collisions, pockets | None |
+| [`enhanced_simulation.py`](enhanced_simulation.py) | **Complete Integration** | Physics + PoolMind pipeline + scenarios | None |
+| [`simple_physics_demo.py`](simple_physics_demo.py) | **Lightweight Demo** | Basic physics, no dependencies | None |
+| [`replay_system.py`](replay_system.py) | **Analysis & Replay** | Record/replay sequences, analytics | None |
 
-## 🚀 Usage
+## 🎱 Advanced Physics Features
 
-### Quick Demo (Recommended)
+### ✅ **Milestone 1: Ball Physics**
+- Realistic velocity vectors and momentum
+- Friction and gradual deceleration
+- Ball-to-ball elastic collisions
+- Energy conservation and transfer
 
-Test PoolMind without any camera:
+### ✅ **Milestone 2: Wall Bounces**
+- Table boundary collision detection
+- Angle-preserving reflections
+- Energy loss on wall impacts
+- Corner collision handling
 
+### ✅ **Milestone 3: Pocket System**
+- 6 realistic pocket positions
+- Proximity-based "suction" effect
+- Ball removal when potted
+- Visual feedback system
+
+### ✅ **Milestone 4: Interactive Cue**
+- Mouse-based aiming system
+- Visual trajectory preview
+- Variable force application
+- Multiple input methods
+
+### ✅ **Milestone 5: Training Scenarios**
+- Multiple practice setups
+- Scenario switching system
+- Position validation
+- Training-specific arrangements
+
+## 🚀 Quick Start
+
+### Advanced Physics Simulation
 ```bash
-# Activate environment first
-source ../.venv/bin/activate
 export PYTHONPATH="$(pwd)/../../src"
-
-# Run main demo
-./demo.py
+python physics_simulator.py
 ```
 
-**What you'll see:**
-- Virtual pool table with ArUco markers
-- Ball detection and tracking
-- Game state analysis
-- Web interface (if enabled)
-- Real-time processing stats
+**Controls:**
+- `Left Click + Drag`: Aim cue stick
+- `1-5`: Force presets
+- `SPACE`: Random shot
+- `R`: Reset balls
+- `Q/ESC`: Quit
 
-### Simplified Computer Vision Demo
-
-Focus on core computer vision without game logic:
-
+### Complete Integration Demo
 ```bash
-./simple_demo.py
+export PYTHONPATH="$(pwd)/../../src"
+python enhanced_simulation.py
 ```
 
-**Features:**
-- Basic ball detection using HoughCircles
-- ArUco marker detection
-- Simplified visualization
-- Performance benchmarking
-- Debugging overlays
+**Additional Controls:**
+- `SPACE`: Pause/Resume
+- `N/P`: Next/Previous scenario
+- `D`: Toggle debug overlay
+
+### Simple Physics (No Dependencies)
+```bash
+python simple_physics_demo.py
+```
 
 ### Virtual Table Generator
 

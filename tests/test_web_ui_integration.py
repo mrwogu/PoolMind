@@ -1,12 +1,10 @@
 """
 Integration tests for PoolMind Web UI functionality and real-time data updates
 """
-import json
 import threading
 import time
-from unittest.mock import MagicMock, Mock, patch
+from unittest.mock import patch
 
-import pytest
 from fastapi.testclient import TestClient
 
 from poolmind.web.hub import FrameHub
@@ -42,13 +40,21 @@ class TestWebUIIntegration:
         assert "Download ArUco Markers" in content
         assert "Reset Game" in content
 
-    def test_live_stream_endpoint_functionality(self):
+    @patch("poolmind.web.server.StreamingResponse")
+    def test_live_stream_endpoint_functionality(self, mock_streaming_response):
         """Test MJPEG stream endpoint"""
         import numpy as np
+        from fastapi.responses import Response
 
         # Set up test frame in hub
         test_frame = np.zeros((480, 640, 3), dtype=np.uint8)
         self.hub.update_frame(test_frame)
+
+        # Mock StreamingResponse to return a regular response instead of infinite stream
+        mock_streaming_response.return_value = Response(
+            content=b"--frame\r\nContent-Type: image/jpeg\r\n\r\nfake_jpeg_data\r\n",
+            media_type="multipart/x-mixed-replace; boundary=frame",
+        )
 
         response = self.client.get("/stream.mjpg")
         assert response.status_code == 200
@@ -265,8 +271,6 @@ class TestRealTimeDataUpdates:
 
     def test_memory_efficiency_large_dataset(self):
         """Test system handles large amounts of data efficiently"""
-        import numpy as np
-
         # Generate large number of events
         for i in range(100):
             event = {
@@ -322,13 +326,21 @@ class TestWebUIButtonFunctionality:
         self.hub = FrameHub()
         set_hub(self.hub)
 
-    def test_fullscreen_button_endpoint(self):
+    @patch("poolmind.web.server.StreamingResponse")
+    def test_fullscreen_button_endpoint(self, mock_streaming_response):
         """Test fullscreen functionality (client-side, so test supporting endpoints)"""
         # Fullscreen is client-side JS, but test stream endpoint it uses
         import numpy as np
+        from fastapi.responses import Response
 
         test_frame = np.zeros((480, 640, 3), dtype=np.uint8)
         self.hub.update_frame(test_frame)
+
+        # Mock StreamingResponse to prevent hanging
+        mock_streaming_response.return_value = Response(
+            content=b"--frame\r\nContent-Type: image/jpeg\r\n\r\nfake_jpeg_data\r\n",
+            media_type="multipart/x-mixed-replace; boundary=frame",
+        )
 
         response = self.client.get("/stream.mjpg")
         assert response.status_code == 200

@@ -81,6 +81,7 @@ jobs:
     - name: Run tests with pytest
       env:
         PYTHONPATH: src
+      timeout-minutes: 10
       run: |
         pytest tests/ --cov=src/poolmind --cov-report=xml --cov-report=term-missing
 

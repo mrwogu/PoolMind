@@ -75,6 +75,18 @@ chore: update OpenCV to version 4.8.1
 
 **Pre-commit validation:** Gitlint automatically validates commit messages format before each commit.
 
+**Critical Commit Rules:**
+- **NEVER use `git commit --no-verify`** - this bypasses essential quality checks
+- **ALWAYS fix all pre-commit hook errors** before committing:
+  - Fix import sorting (isort)
+  - Fix code formatting (black)
+  - Fix linting issues (flake8)
+  - Address security issues (bandit) if critical
+  - Fix docstring issues (pydocstyle) when adding new public APIs
+- **Run tests before committing:** `python -m pytest tests/ -x`
+- **If pre-commit hooks fail:** fix the issues, not the process
+- **Quality over speed:** proper commits prevent CI/CD failures and technical debt
+
 ## Key Patterns & Conventions
 
 ### Configuration-Driven Architecture

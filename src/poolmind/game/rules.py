@@ -3,7 +3,7 @@
 """
 
 from enum import Enum
-from typing import Any, Dict, Optional, Set
+from typing import Any, Dict, Set
 
 
 class BallType(Enum):
@@ -200,7 +200,8 @@ class EightBallRules:
             events.append(
                 {
                     "type": "legal_pot",
-                    "info": f"Player {self.current_player} potted {own_balls_potted} ball(s)",
+                    "info": f"Player {self.current_player} potted "
+                    f"{own_balls_potted} ball(s)",
                 }
             )
             # Check if all group balls are cleared for 8-ball shot

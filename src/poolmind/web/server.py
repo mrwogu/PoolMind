@@ -309,7 +309,10 @@ async def metrics():
                 metrics_data.append(f"poolmind_balls_detected {active_balls}")
 
                 # Frame processing time
-                help_text = "# HELP poolmind_frame_processing_time_seconds Frame processing time"
+                help_text = (
+                    "# HELP poolmind_frame_processing_time_seconds "
+                    "Frame processing time"
+                )
                 metrics_data.append(help_text)
                 metrics_data.append(
                     "# TYPE poolmind_frame_processing_time_seconds gauge"
@@ -320,7 +323,10 @@ async def metrics():
                 )
 
                 # Detection accuracy
-                help_text = "# HELP poolmind_detection_accuracy_percent Detection accuracy percent"
+                help_text = (
+                    "# HELP poolmind_detection_accuracy_percent "
+                    "Detection accuracy percent"
+                )
                 metrics_data.append(help_text)
                 metrics_data.append("# TYPE poolmind_detection_accuracy_percent gauge")
                 detection_accuracy = state.get("detection_accuracy", 0)

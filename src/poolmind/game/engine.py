@@ -34,7 +34,7 @@ class GameEngine:
         current_ids = set(tracks.keys())
 
         # Detect if a shot is in progress (movement detected)
-        # This is a simplified version - in real implementation you'd track ball velocities
+        # This is simplified - in real implementation track ball velocities
         if current_ids and not self.shot_in_progress:
             self.shot_in_progress = True
             self.last_shot_potted = set()

@@ -2,7 +2,6 @@ import argparse
 import time
 
 import cv2
-import numpy as np
 import yaml
 
 from .calib.markers import MarkerHomography

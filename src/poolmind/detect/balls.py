@@ -35,7 +35,7 @@ class BallDetector:
         return balls
 
     def _classify_ball_color(self, img, cx, cy, radius):
-        """Simple color classification - sample HSV in center region of detected circle"""
+        """Simple color classification - sample HSV in center region of ball"""
         # Sample smaller region in the center of the ball
         sample_r = max(3, radius // 3)
         y1, y2 = max(0, cy - sample_r), min(img.shape[0], cy + sample_r)

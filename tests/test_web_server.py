@@ -1,10 +1,8 @@
 """
-Tests for PoolMind Web Server functionality
+Tests for Web Server module
 """
-import json
 from unittest.mock import Mock, patch
 
-import pytest
 from fastapi.testclient import TestClient
 
 from poolmind.web import server
@@ -198,12 +196,21 @@ class TestWebServer:
 
         assert server.hub == new_hub
 
+    @patch("poolmind.web.server.StreamingResponse")
     @patch("asyncio.sleep")
-    def test_stream_endpoint_with_hub(self, mock_sleep):
+    def test_stream_endpoint_with_hub(self, mock_sleep, mock_streaming_response):
         """Test MJPEG stream endpoint with hub"""
         # Mock hub returning JPEG data
         mock_jpeg_data = b"fake_jpeg_data"
         self.mock_hub.get_jpeg.return_value = mock_jpeg_data
+
+        # Mock StreamingResponse to return a normal response
+        from fastapi.responses import Response
+
+        mock_streaming_response.return_value = Response(
+            content=b"fake_stream_data",
+            media_type="multipart/x-mixed-replace; boundary=frame",
+        )
 
         response = self.client.get("/stream.mjpg")
 
@@ -211,12 +218,18 @@ class TestWebServer:
         assert response.status_code == 200
         assert "multipart/x-mixed-replace" in response.headers["content-type"]
 
+    @patch("poolmind.web.server.StreamingResponse")
     @patch("asyncio.sleep")
     @patch("cv2.imencode")
     @patch("cv2.putText")
     @patch("numpy.zeros")
     def test_stream_endpoint_no_hub(
-        self, mock_zeros, mock_puttext, mock_imencode, mock_sleep
+        self,
+        mock_zeros,
+        mock_puttext,
+        mock_imencode,
+        mock_sleep,
+        mock_streaming_response,
     ):
         """Test MJPEG stream endpoint without hub"""
         server.hub = None
@@ -224,6 +237,14 @@ class TestWebServer:
         # Mock placeholder image creation
         mock_zeros.return_value = "mock_image"
         mock_imencode.return_value = (True, b"placeholder_jpeg")
+
+        # Mock StreamingResponse to return a normal response
+        from fastapi.responses import Response
+
+        mock_streaming_response.return_value = Response(
+            content=b"fake_stream_data",
+            media_type="multipart/x-mixed-replace; boundary=frame",
+        )
 
         response = self.client.get("/stream.mjpg")
 

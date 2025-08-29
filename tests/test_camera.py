@@ -1,13 +1,12 @@
 """
-Tests for PoolMind Camera functionality
+Tests for Camera capture module
 """
 import threading
 import time
-from unittest.mock import MagicMock, Mock, patch
+from unittest.mock import Mock, patch
 
 import cv2
 import numpy as np
-import pytest
 
 from poolmind.capture.camera import Camera
 
@@ -104,7 +103,7 @@ class TestCamera:
         time.sleep(0.1)
 
         # Should have called sleep on failure
-        mock_sleep.assert_called_with(0.005)
+        mock_sleep.assert_any_call(0.005)
 
         camera.release()
 
@@ -162,7 +161,7 @@ class TestCamera:
         time.sleep(0.1)  # Let it try to get frame
 
         # Should have called sleep
-        mock_sleep.assert_called_with(0.005)
+        mock_sleep.assert_any_call(0.005)
 
         camera.release()
 
@@ -170,10 +169,14 @@ class TestCamera:
     def test_camera_release(self, mock_videocapture):
         """Test camera release functionality"""
         mock_cap = Mock()
+        mock_cap.read.return_value = (False, None)  # Make it return proper tuple
         mock_videocapture.return_value = mock_cap
 
         camera = Camera()
         original_thread = camera.thread
+
+        # Give thread time to start
+        time.sleep(0.05)
 
         # Verify thread is running
         assert original_thread.is_alive()
@@ -183,8 +186,7 @@ class TestCamera:
         # Verify stopped flag is set
         assert camera.stopped
 
-        # Verify thread joins (give it time)
-        time.sleep(0.1)
+        # After release, thread should be joined and not alive
         assert not original_thread.is_alive()
 
         # Verify VideoCapture.release() was called

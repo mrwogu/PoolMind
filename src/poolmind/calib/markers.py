@@ -19,7 +19,11 @@ class MarkerHomography:
         self.H_inv = None
         if _ARUCO_AVAILABLE:
             self.dict = aruco.getPredefinedDictionary(aruco.DICT_4X4_50)
-            self.params = aruco.DetectorParameters_create()
+            # Handle both old and new OpenCV ArUco API
+            try:
+                self.params = aruco.DetectorParameters_create()  # Old API
+            except AttributeError:
+                self.params = aruco.DetectorParameters()  # New API
         self._dst_pts = np.array(
             [
                 [0, 0],

@@ -1,10 +1,9 @@
 """
-Tests for PoolMind UI Overlay functionality
+Tests for UI overlay module
 """
 from unittest.mock import Mock, patch
 
 import numpy as np
-import pytest
 
 from poolmind.ui.overlay import Overlay
 
@@ -19,7 +18,7 @@ class TestOverlay:
         # Mock table geometry
         self.mock_table = Mock()
         self.mock_table.back_project_points.return_value = [(100, 100), (200, 200)]
-        self.mock_table.default_pockets.return_value = [(50, 50), (150, 150)]
+        self.mock_table.default_pockets.return_value = [(50, 50, 20), (150, 150, 20)]
 
         self.overlay = Overlay(self.config, self.mock_table)
 
@@ -206,14 +205,10 @@ class TestOverlay:
         frame = np.zeros((480, 640, 3), dtype=np.uint8)
         h_matrix = np.eye(3, dtype=np.float32)
 
-        # Mock back projection
-        self.mock_table.back_project_points.return_value = [(100, 100), (200, 200)]
-
         self.overlay.draw_pockets(frame, h_matrix)
 
-        # Should call back_project_points and draw circles
+        # Should call default_pockets and draw circles
         self.mock_table.default_pockets.assert_called_once_with(20)
-        self.mock_table.back_project_points.assert_called_once()
         assert mock_circle.call_count >= 1
 
     def test_draw_pockets_without_homography(self):

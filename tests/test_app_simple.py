@@ -6,7 +6,6 @@ from unittest.mock import Mock, patch
 
 import cv2
 import numpy as np
-import pytest
 import yaml
 
 from poolmind.app import main, parse_args
@@ -52,13 +51,36 @@ class TestPoolMindApp:
 
     @patch("poolmind.app.yaml.safe_load")
     @patch("builtins.open")
-    def test_config_loading(self, mock_open, mock_yaml_load):
+    @patch("poolmind.app.Camera")
+    @patch("poolmind.app.MarkerHomography")
+    @patch("poolmind.app.cv2.namedWindow")
+    @patch("poolmind.app.cv2.setWindowProperty")
+    def test_config_loading(
+        self,
+        mock_setprop,
+        mock_window,
+        mock_homography,
+        mock_camera,
+        mock_open,
+        mock_yaml_load,
+    ):
         """Test configuration file loading"""
         mock_yaml_load.return_value = self.config_data
 
+        # Mock camera to avoid actual camera initialization
+        mock_camera_instance = Mock()
+        mock_camera_instance.frames.return_value = (
+            []
+        )  # Empty generator to exit loop immediately
+        mock_camera.return_value = mock_camera_instance
+
+        # Mock homography to return proper tuple
+        mock_homography_instance = Mock()
+        mock_homography_instance.homography_from_frame.return_value = (None, None, None)
+        mock_homography.return_value = mock_homography_instance
+
         with patch("sys.argv", ["app.py", "--config", "test.yaml"]):
-            with patch.object(self, "_mock_main_components"):
-                main()
+            main()
 
         mock_open.assert_called_with("test.yaml", "r")
         mock_yaml_load.assert_called_once()
@@ -133,7 +155,9 @@ class TestPoolMindApp:
         """Context manager to patch all component classes"""
         patches = [
             patch("poolmind.app.Camera", return_value=self._mock_camera()),
-            patch("poolmind.app.MarkerHomography", return_value=Mock()),
+            patch(
+                "poolmind.app.MarkerHomography", return_value=self._mock_homography()
+            ),
             patch("poolmind.app.TableGeometry", return_value=Mock()),
             patch("poolmind.app.BallDetector", return_value=Mock()),
             patch("poolmind.app.CentroidTracker", return_value=Mock()),
@@ -153,6 +177,12 @@ class TestPoolMindApp:
                     p.__exit__(exc_type, exc_val, exc_tb)
 
         return PatchContext()
+
+    def _mock_homography(self):
+        """Create a mock homography that returns proper tuple"""
+        mock = Mock()
+        mock.homography_from_frame.return_value = (None, None, None)
+        return mock
 
     def _mock_camera(self):
         """Create a mock camera that yields one frame then stops"""
@@ -178,12 +208,48 @@ class TestPoolMindApp:
     def test_component_initialization_parameters(self):
         """Test that components are initialized with correct config parameters"""
         with patch("poolmind.app.Camera") as mock_camera:
-            with self._patch_all_components():
-                with patch("sys.argv", ["app.py", "--config", self.temp_config.name]):
-                    try:
-                        main()
-                    except (AttributeError, ValueError, ImportError):
-                        pass  # Expected due to incomplete mocking
+            # Mock camera to return a simple instance
+            mock_camera_instance = self._mock_camera()
+            mock_camera.return_value = mock_camera_instance
+
+            # Patch other components but not Camera since we're testing it
+            with patch(
+                "poolmind.app.MarkerHomography", return_value=self._mock_homography()
+            ):
+                with patch("poolmind.app.TableGeometry", return_value=Mock()):
+                    with patch("poolmind.app.BallDetector", return_value=Mock()):
+                        with patch("poolmind.app.CentroidTracker", return_value=Mock()):
+                            with patch(
+                                "poolmind.app.Overlay",
+                                return_value=self._mock_overlay(),
+                            ):
+                                with patch(
+                                    "poolmind.app.ReplayRecorder", return_value=Mock()
+                                ):
+                                    with patch(
+                                        "poolmind.app.GameEngine",
+                                        return_value=self._mock_engine(),
+                                    ):
+                                        with patch(
+                                            "poolmind.app.FrameHub", return_value=Mock()
+                                        ):
+                                            with patch("poolmind.app.cv2.namedWindow"):
+                                                with patch(
+                                                    "sys.argv",
+                                                    [
+                                                        "app.py",
+                                                        "--config",
+                                                        self.temp_config.name,
+                                                    ],
+                                                ):
+                                                    try:
+                                                        main()
+                                                    except (
+                                                        AttributeError,
+                                                        ValueError,
+                                                        ImportError,
+                                                    ):
+                                                        pass  # Expected due to incomplete mocking
 
             # Verify camera was initialized with correct parameters
             mock_camera.assert_called_once_with(index=0, width=1280, height=720, fps=30)

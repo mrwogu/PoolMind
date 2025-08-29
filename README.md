@@ -1,7 +1,18 @@
 # 🎱 PoolMind
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![Python 3.11+](https://img.shields.io/badge/python-3.11+-blue.svg)](https://www.python.org/downloads/)
+[![### 📋 Scripts Reference
+
+| Command | Purpose | Use Case |
+|---------|---------|----------|
+| `./scripts/setup/setup.sh` | Development environment | Local development setup |
+| `./scripts/setup/setup-pi.sh` | Production Pi setup | Initial Pi installation |
+| `./scripts/setup/run.sh` | Start application | Running PoolMind |
+| `./scripts/demo/demo.py` | Demo without camera | Testing without hardware |
+| `./scripts/deployment/status.sh` | System status | Health check and logs |
+| `./scripts/deployment/update.sh` | Manual update | Force update Pi installation |
+
+> **📖 Complete documentation:** [scripts/README.md](scripts/README.md)](https://img.shields.io/badge/python-3.11+-blue.svg)](https://www.python.org/downloads/)
 [![OpenCV](https://img.shields.io/badge/OpenCV-4.5+-green.svg)](https://opencv.org/)
 [![FastAPI](https://img.shields.io/badge/FastAPI-0.68+-red.svg)](https://fastapi.tiangolo.com/)
 [![Raspberry Pi](https://img.shields.io/badge/Raspberry%20Pi-4-C51A4A.svg)](https://www.raspberrypi.org/)
@@ -62,9 +73,9 @@ cd ~ && curl -fsSL https://raw.githubusercontent.com/mrwogu/PoolMind/main/instal
 
 ```bash
 cd ~ && git clone https://github.com/mrwogu/PoolMind.git && cd PoolMind
-./scripts/setup.sh
+./scripts/setup/setup.sh
 source .venv/bin/activate
-./scripts/run.sh
+./scripts/setup/run.sh
 ```
 
 > **📖 See [scripts/README.md](scripts/README.md) for complete script documentation**
@@ -107,33 +118,33 @@ cd ~ && curl -fsSL https://raw.githubusercontent.com/mrwogu/PoolMind/main/instal
 
 ```bash
 cd ~ && git clone https://github.com/mrwogu/PoolMind.git && cd PoolMind
-./scripts/setup.sh        # Set up development environment
-source .venv/bin/activate  # Activate Python environment
-./scripts/run.sh           # Start application
+./scripts/setup/setup.sh        # Set up development environment
+source .venv/bin/activate        # Activate Python environment
+./scripts/setup/run.sh           # Start application
 ```
 
 **Development workflow:**
 ```bash
 # Test without camera (useful for non-Pi development)
-python scripts/demo.py
+./scripts/demo/demo.py
 
 # Run with camera
-./scripts/run.sh
+./scripts/setup/run.sh
 
 # Check system status (Pi only)
-./scripts/status.sh
+./scripts/deployment/status.sh
 ```
 
 ### � Scripts Reference
 
 | Command | Purpose | Use Case |
 |---------|---------|----------|
-| `./scripts/setup.sh` | Development environment | Local development setup |
-| `./scripts/setup-pi.sh` | Production Pi setup | Initial Pi installation |
-| `./scripts/run.sh` | Start application | Running PoolMind |
-| `python scripts/demo.py` | Demo without camera | Testing without hardware |
-| `./scripts/status.sh` | System status | Health check and logs |
-| `./scripts/update.sh` | Manual update | Force update Pi installation |
+| `./scripts/setup/setup.sh` | Development environment | Local development setup |
+| `./scripts/setup/setup-pi.sh` | Production Pi setup | Initial Pi installation |
+| `./scripts/setup/run.sh` | Start application | Running PoolMind |
+| `./scripts/demo/demo.py` | Demo without camera | Testing without hardware |
+| `./scripts/deployment/status.sh` | System status | Health check and logs |
+| `./scripts/deployment/update.sh` | Manual update | Force update Pi installation |
 
 > **📖 Complete documentation:** [scripts/README.md](scripts/README.md)
 
@@ -154,13 +165,13 @@ PoolMind includes a complete auto-deployment solution for Raspberry Pi that auto
 
 ```bash
 # Check system status and logs
-./scripts/status.sh
+./scripts/deployment/status.sh
 
 # Force manual update
-./scripts/update.sh
+./scripts/deployment/update.sh
 
 # Deploy to remote Pi from development machine
-./scripts/deploy-remote.sh 192.168.1.100
+./scripts/deployment/deploy-remote.sh 192.168.1.100
 
 # View live logs
 sudo journalctl -u poolmind -f
@@ -265,15 +276,15 @@ Access at `http://<raspberry-pi-ip>:8000`
 
 ```bash
 cd ~ && git clone https://github.com/mrwogu/PoolMind.git && cd PoolMind
-./scripts/setup.sh        # Set up development environment
-source .venv/bin/activate  # Activate Python environment
+./scripts/setup/setup.sh        # Set up development environment
+source .venv/bin/activate        # Activate Python environment
 ```
 
 ### Testing Without Hardware
 
 ```bash
 # Demo mode (creates synthetic frames)
-python scripts/demo.py
+./scripts/demo/demo.py
 
 # Web server only
 PYTHONPATH=src python -m uvicorn poolmind.web.server:app --reload

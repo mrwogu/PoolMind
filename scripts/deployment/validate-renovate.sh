@@ -46,13 +46,13 @@ done
 # Check if Node.js is available for advanced validation
 if command -v node &> /dev/null; then
     print_status $BLUE "🔧 Node.js found, running advanced validation..."
-    
+
     # Try to install and run renovate config validator
     if npx --version &> /dev/null; then
         print_status $BLUE "📦 Installing Renovate for validation..."
         if npx renovate --version &> /dev/null 2>&1; then
             print_status $GREEN "✅ Renovate installed successfully"
-            
+
             # Validate the config (dry-run)
             print_status $BLUE "🧪 Running configuration validation..."
             if npx renovate --help | grep -q "validate"; then

@@ -7,10 +7,10 @@
 curl -fsSL https://raw.githubusercontent.com/mrwogu/PoolMind/main/install.sh | bash
 
 # Alternative - deploy remotely from any machine:
-git clone https://github.com/mrwogu/PoolMind.git && cd PoolMind && ./scripts/deploy-remote.sh 192.168.1.100
+git clone https://github.com/mrwogu/PoolMind.git && cd PoolMind && ./scripts/deployment/deploy-remote.sh 192.168.1.100
 
 # Or directly on Pi (if you cloned repo):
-git clone https://github.com/mrwogu/PoolMind.git && cd PoolMind && ./scripts/setup-pi.sh
+git clone https://github.com/mrwogu/PoolMind.git && cd PoolMind && ./scripts/setup/setup-pi.sh
 ```
 
 ## What Happens After Setup
@@ -27,10 +27,10 @@ git clone https://github.com/mrwogu/PoolMind.git && cd PoolMind && ./scripts/set
 
 ```bash
 # Check everything is working
-./scripts/status.sh
+./scripts/deployment/status.sh
 
 # Force update now
-./scripts/update.sh
+./scripts/deployment/update.sh
 
 # Watch live logs
 sudo journalctl -u poolmind -f

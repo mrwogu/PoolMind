@@ -27,7 +27,7 @@ export PYTHONPATH="$(pwd)/src"
 python -m poolmind.app --config config/config.yaml
 
 # For development testing without camera
-PYTHONPATH=src python scripts/demo.py
+PYTHONPATH=src ./scripts/demo/demo.py
 
 # Web server only
 PYTHONPATH=src python -m uvicorn poolmind.web.server:app --host 0.0.0.0 --port 8000
@@ -51,17 +51,17 @@ This project uses **Conventional Commits** specification. All commit messages MU
 ```
 
 **Required commit types:**
-- `feat`: nowa funkcjonalność dla użytkownika
-- `fix`: naprawa błędu dla użytkownika
-- `docs`: zmiany w dokumentacji
-- `style`: formatowanie kodu (bez zmian w logice)
-- `refactor`: refaktoryzacja kodu (bez nowych funkcji czy napraw)
-- `test`: dodanie lub modyfikacja testów
-- `chore`: aktualizacja zależności, konfiguracji, narzędzi
-- `perf`: poprawa wydajności
-- `ci`: zmiany w CI/CD pipeline
-- `build`: zmiany w systemie buildowania
-- `revert`: cofnięcie poprzednich zmian
+- `feat`: new feature for the user
+- `fix`: bug fix for the user
+- `docs`: documentation changes
+- `style`: code formatting (no logic changes)
+- `refactor`: code refactoring (no new features or fixes)
+- `test`: adding or modifying tests
+- `chore`: dependency updates, configuration, tools
+- `perf`: performance improvements
+- `ci`: CI/CD pipeline changes
+- `build`: build system changes
+- `revert`: revert previous changes
 
 **Examples:**
 ```bash
@@ -118,7 +118,7 @@ for ev in engine.consume_events():
 ## Development Workflows
 
 ### Running Without Hardware
-Use `scripts/demo.py` for testing without camera - creates synthetic frames and tests game engine logic.
+Use `scripts/demo/demo.py` for testing without camera - creates synthetic frames and tests game engine logic.
 
 ### Configuration Tuning
 Edit `config/config.yaml` for:
@@ -151,7 +151,7 @@ Components gracefully degrade when hardware unavailable (e.g., no camera returns
 
 ### ArUco Marker Requirements
 - **Exact placement**: Corner IDs must be 0 (top-left), 1 (top-right), 2 (bottom-right), 3 (bottom-left)
-- **Print quality critical**: Use `scripts/gen_markers.py` with high DPI
+- **Print quality critical**: Use `scripts/tools/gen_markers.py` with high DPI
 - **EMA smoothing**: Homography uses exponential moving average for stability (`calibration.ema_alpha`)
 
 ### Performance Considerations
@@ -227,14 +227,14 @@ async def stream_generator():
 ### Environment Setup Commands
 ```bash
 # Initial setup (run once)
-./scripts/setup.sh  # Installs dependencies, creates venv, generates markers
+./scripts/setup/setup.sh  # Installs dependencies, creates venv, generates markers
 
 # Development activation
 source .venv/bin/activate
 export PYTHONPATH="$(pwd)/src"
 
 # Testing without hardware
-PYTHONPATH=src python scripts/demo.py
+PYTHONPATH=src ./scripts/demo/demo.py
 
 # Web-only development
 PYTHONPATH=src python -m uvicorn poolmind.web.server:app --reload
@@ -290,7 +290,7 @@ class CustomRules:
 PYTHONPATH=src python -c "from poolmind.detect.balls import BallDetector; print('✅ Imports OK')"
 
 # Full pipeline test
-PYTHONPATH=src python scripts/demo.py
+PYTHONPATH=src ./scripts/demo/demo.py
 
 # Web interface test
 curl http://localhost:8000/state

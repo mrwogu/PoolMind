@@ -9,8 +9,8 @@ Generates a synthetic pool table image with ArUco markers and simulated balls.
 
 ```bash
 cd PoolMind
-export PYTHONPATH="$(pwd)/src:$(pwd)/scripts"
-python scripts/virtual_table.py
+export PYTHONPATH="$(pwd)/src"
+./scripts/demo/virtual_table.py
 ```
 
 **Features:**
@@ -30,8 +30,8 @@ Complete PoolMind computer vision pipeline simulation with virtual table.
 
 ```bash
 cd PoolMind
-export PYTHONPATH="$(pwd)/src:$(pwd)/scripts"
-python scripts/simple_demo.py
+export PYTHONPATH="$(pwd)/src"
+./scripts/demo/simple_demo.py
 ```
 
 **Tests:**
@@ -52,7 +52,7 @@ Test with real USB/built-in camera.
 ```bash
 cd PoolMind
 export PYTHONPATH="$(pwd)/src"
-python scripts/camera_test.py --camera 0
+./scripts/tools/camera_test.py --camera 0
 ```
 
 **Features:**
@@ -76,7 +76,7 @@ Original component test without graphics - game logic testing.
 ```bash
 cd PoolMind
 export PYTHONPATH="$(pwd)/src"
-python scripts/demo.py
+./scripts/demo/demo.py
 ```
 
 ## 🛠️ Configuration
@@ -124,10 +124,10 @@ python -c "import cv2.aruco; print('ArUco available')"
 ### Camera not working
 ```bash
 # List available cameras
-python scripts/camera_test.py --list-cameras
+./scripts/testing/camera_test.py --list-cameras
 
 # Test specific camera
-python scripts/camera_test.py --camera 1
+./scripts/testing/camera_test.py --camera 1
 ```
 
 ### ArUco Markers - printing
@@ -135,7 +135,7 @@ python scripts/camera_test.py --camera 1
 # Generate markers for printing
 cd PoolMind
 export PYTHONPATH="$(pwd)/src"
-python scripts/gen_markers.py --out markers --ids 0 1 2 3 --px 1200 --pdf
+./scripts/tools/gen_markers.py --out markers --ids 0 1 2 3 --px 1200 --pdf
 ```
 
 Print `markers/markers_A4.pdf` and place markers:
@@ -215,7 +215,7 @@ frame[y:y+size, x:x+size] = marker_img
 **Verification**:
 ```bash
 # Test with debug script
-PYTHONPATH=src python scripts/debug_markers.py
+PYTHONPATH=src ./scripts/testing/debug_markers.py
 # Expected output: "✅ Found 4 markers: [2, 3, 1, 0]"
 ```
 

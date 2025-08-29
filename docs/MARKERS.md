@@ -4,7 +4,7 @@ To prepare table corner markers:
 
 ```bash
 # in repo:
-python3 scripts/gen_markers.py --out markers --ids 0 1 2 3 --px 1200 --pdf
+./scripts/tools/gen_markers.py --out markers --ids 0 1 2 3 --px 1200 --pdf
 ```
 
 - PNG files will be saved in `markers/`.

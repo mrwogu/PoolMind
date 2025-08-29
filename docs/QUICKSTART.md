@@ -1,70 +1,96 @@
 # 🎱 PoolMind - Quick Start
 
-## 🚀 One-Line Installation for Raspberry Pi
+> 📖 **Main Documentation**: For complete installation guide and project overview, see the [main README.md](https://github.com/mrwogu/PoolMind/blob/main/README.md)
 
+## 🚀 One-Line Installation
+
+**Raspberry Pi Auto-Installation:**
 ```bash
-cd ~ && curl -fsSL https://raw.githubusercontent.com/mrwogu/PoolMind/main/install.sh | bash
+curl -fsSL https://raw.githubusercontent.com/mrwogu/PoolMind/main/install.sh | bash
 ```
 
-## What happens next?
+**Development Setup:**
+```bash
+git clone https://github.com/mrwogu/PoolMind.git
+cd PoolMind
+./scripts/setup/setup.sh
+```
 
-✅ **Automatic setup** (5-10 minutes):
-- Installs all system dependencies
-- Downloads PoolMind from GitHub
-- Sets up Python environment
-- Generates ArUco markers
-- Configures auto-updates every 30 minutes
-- Starts web interface on port 8000
+## 📋 Hardware Setup
 
-✅ **Auto-updates forever**:
-- Checks GitHub every 30 minutes
-- Updates automatically when new version available
-- Backs up before each update
-- Restarts service automatically
-- Starts on boot
+### Required Hardware
+- **Raspberry Pi 4** (4GB+ RAM recommended)
+- **USB Camera** (1080p+) with overhead mounting
+- **Pool Table** with space for markers
+- **Printer** for ArUco markers
 
-## Next Steps
+### Camera Positioning (Critical)
+- **Mount overhead** - directly above table center
+- **Height**: 2-3 meters above surface
+- **Angle**: Perfect 90° downward (bird's-eye view)
+- **Coverage**: Full table must be visible
 
-1. **🖨️ Print markers**: `~/PoolMind/markers/markers_A4.pdf`
-2. **📍 Place markers**: At table corners (0=top-left, 1=top-right, 2=bottom-right, 3=bottom-left)
-3. **🌐 Open browser**: `http://your-pi-ip:8000`
-4. **🎱 Play pool!**
+> ⚠️ **Important**: Side-mounted cameras will not work. Overhead positioning is essential.
 
-## Management
+## 🎯 Setup Steps
+
+1. **Install** - Run installation command above
+2. **Print** - Print `~/PoolMind/markers/markers_A4.pdf`
+3. **Mount** - Place markers at table corners:
+   - `0` - Top-left corner
+   - `1` - Top-right corner
+   - `2` - Bottom-right corner
+   - `3` - Bottom-left corner
+4. **Access** - Open `http://your-pi-ip:8000` in browser
+5. **Play** - Start playing pool!
+
+## 🛠️ Management
 
 ```bash
 # Check status
 ./scripts/deployment/status.sh
 
-# Manual update
+# Force update
 ./scripts/deployment/update.sh
 
 # View logs
 sudo journalctl -u poolmind -f
 
-# Restart
+# Restart service
 sudo systemctl restart poolmind
 ```
 
-## Features
+## 🧪 Testing & Development
 
-- 🎥 Live video stream with ball tracking
-- 🎯 Automatic calibration using ArUco markers
-- 🎱 Ball detection with color classification
-- 📊 Game tracking with 8-ball rules
-- 🌐 Web dashboard with dark/light mode
-- 🔄 Auto-updates from GitHub
-- 🚀 Zero-maintenance deployment
+```bash
+# Test without hardware
+./scripts/demo/enhanced_simulation.py
 
-## Hardware Needed
+# Physics simulation
+./scripts/demo/physics_simulator.py
 
-- **Raspberry Pi 4** (4GB+ recommended)
-- **USB camera** (1080p+) mounted overhead
-- **Pool table**
-- **Printer** for ArUco markers
+# Camera test
+./scripts/tools/camera_test.py --list-cameras
+```
+
+## ⚡ Auto-Update Features
+
+After installation, PoolMind automatically:
+- ✅ Starts on boot
+- ✅ Checks GitHub for updates every 30 minutes
+- ✅ Downloads and installs updates
+- ✅ Creates backups before updates
+- ✅ Restarts service after updates
+- ✅ Provides web interface on port 8000
+
+## 📖 More Information
+
+- **[Configuration Guide](CONFIGURATION.md)** - Camera and detection settings
+- **[Calibration Setup](CALIBRATION.md)** - ArUco marker positioning
+- **[Web Interface](WEB.md)** - Dashboard and API reference
+- **[Architecture](ARCHITECTURE.md)** - System design and components
+- **[Simulation Scripts](SIMULATION.md)** - Testing without hardware
 
 ---
 
-**That's it! PoolMind will now run 24/7 and update itself automatically.**
-
-📖 **Full documentation:** [GitHub Repository](https://github.com/mrwogu/PoolMind)
+**⭐ For complete documentation, see the [main README.md](https://github.com/mrwogu/PoolMind/blob/main/README.md)**

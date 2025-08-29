@@ -4,35 +4,6 @@
 
 This is a **computer vision pool assistant** for Raspberry Pi that provides real-time ball tracking, game analysis, and web interface using OpenCV and FastAPI.
 
-### Core Pipeline Flow
-```
-📷 Camera → 🎯 ArUco Calibration → 🔄 Homography Transformation → 🎱 Ball Detection → 📊 Tracking → 🎮 Game Engine → 🌐 Web UI
-```
-
-**Key Components:**
-- `src/poolmind/app.py` - Main application orchestrator
-- `src/poolmind/capture/camera.py` - Threaded video capture
-- `src/poolmind/calib/markers.py` - ArUco marker detection & homography
-- `src/poolmind/detect/balls.py` - HoughCircles + HSV color classification
-- `src/poolmind/track/tracker.py` - Centroid-based object tracking
-- `src/poolmind/game/engine.py` - Game state management & 8-ball rules
-- `src/poolmind/web/server.py` - FastAPI web interface with MJPEG streaming
-
-## Development Environment
-
-**Critical Setup Commands:**
-```bash
-# Always set PYTHONPATH when running Python modules
-export PYTHONPATH="$(pwd)/src"
-python -m poolmind.app --config config/config.yaml
-
-# For development testing without camera
-PYTHONPATH=src ./scripts/demo/demo.py
-
-# Web server only
-PYTHONPATH=src python -m uvicorn poolmind.web.server:app --host 0.0.0.0 --port 8000
-```
-
 **Project Structure Convention:**
 - All Python modules use relative imports within `src/poolmind/`
 - Configuration driven via `config/config.yaml` YAML file
@@ -299,7 +270,7 @@ curl http://localhost:8000/state
 ### Production Deployment
 ```bash
 # Systemd service setup
-sudo cp scripts/poolmind.service /etc/systemd/system/
+sudo cp scripts/systemd/poolmind.service /etc/systemd/system/
 sudo systemctl enable poolmind
 
 # Docker deployment

@@ -16,6 +16,7 @@ nav:
     - Web Interface: WEB.md
   - Developer Guide:
     - Architecture: ARCHITECTURE.md
+    - Simulation & Testing: SIMULATION.md
     - Frontend: FRONTEND.md
   - Reference:
     - ArUco Markers: MARKERS.md

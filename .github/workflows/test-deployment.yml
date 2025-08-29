@@ -68,7 +68,7 @@ jobs:
     - name: Check script syntax
       run: |
         echo "Checking shell script syntax..."
-        for script in scripts/*.sh; do
+        for script in scripts/*/*.sh scripts/*.sh; do
           if [ -f "$script" ]; then
             echo "Checking $script..."
             bash -n "$script"
@@ -78,7 +78,7 @@ jobs:
     - name: Check script permissions
       run: |
         echo "Checking script permissions..."
-        for script in scripts/*.sh; do
+        for script in scripts/*/*.sh scripts/*.sh; do
           if [ -f "$script" ]; then
             if [ -x "$script" ]; then
               echo "✓ $script is executable"
@@ -95,7 +95,7 @@ jobs:
         sudo apt-get update
         sudo apt-get install -y systemd
 
-        for service in scripts/*.service scripts/*.timer; do
+        for service in scripts/systemd/*.service scripts/systemd/*.timer; do
           if [ -f "$service" ]; then
             echo "Validating $service..."
             systemd-analyze verify "$service" || echo "Warning: $service has issues"
@@ -107,7 +107,7 @@ jobs:
         echo "Testing scripts for basic functionality..."
 
         # Test that scripts can be sourced without errors
-        for script in scripts/*.sh; do
+        for script in scripts/*/*.sh scripts/*.sh; do
           if [ -f "$script" ]; then
             echo "Testing $script..."
             # Create a test environment
@@ -144,11 +144,11 @@ jobs:
 
         # Test that auto-update script can be parsed
         cd /home/pi/PoolMind
-        sudo -u pi bash -n scripts/auto-update.sh
+        sudo -u pi bash -n scripts/deployment/auto-update.sh
         echo "✓ Auto-update script syntax is valid"
 
         # Test setup script syntax
-        sudo -u pi bash -n scripts/setup-pi.sh
+        sudo -u pi bash -n scripts/setup/setup-pi.sh
         echo "✓ Setup script syntax is valid"
 
     - name: Test Service Files
@@ -156,8 +156,8 @@ jobs:
         echo "Testing systemd service files..."
 
         # Copy service files to systemd directory
-        sudo cp scripts/*.service /etc/systemd/system/ 2>/dev/null || true
-        sudo cp scripts/*.timer /etc/systemd/system/ 2>/dev/null || true
+        sudo cp scripts/systemd/*.service /etc/systemd/system/ 2>/dev/null || true
+        sudo cp scripts/systemd/*.timer /etc/systemd/system/ 2>/dev/null || true
 
         # Test systemd syntax
         sudo systemctl daemon-reload

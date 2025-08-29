@@ -1,18 +1,7 @@
 # 🎱 PoolMind
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![### 📋 Scripts Reference
-
-| Command | Purpose | Use Case |
-|---------|---------|----------|
-| `./scripts/setup/setup.sh` | Development environment | Local development setup |
-| `./scripts/setup/setup-pi.sh` | Production Pi setup | Initial Pi installation |
-| `./scripts/setup/run.sh` | Start application | Running PoolMind |
-| `./scripts/demo/demo.py` | Demo without camera | Testing without hardware |
-| `./scripts/deployment/status.sh` | System status | Health check and logs |
-| `./scripts/deployment/update.sh` | Manual update | Force update Pi installation |
-
-> **📖 Complete documentation:** [scripts/README.md](scripts/README.md)](https://img.shields.io/badge/python-3.11+-blue.svg)](https://www.python.org/downloads/)
+[![Python](https://img.shields.io/badge/python-3.11+-blue.svg)](https://www.python.org/downloads/)
 [![OpenCV](https://img.shields.io/badge/OpenCV-4.5+-green.svg)](https://opencv.org/)
 [![FastAPI](https://img.shields.io/badge/FastAPI-0.68+-red.svg)](https://fastapi.tiangolo.com/)
 [![Raspberry Pi](https://img.shields.io/badge/Raspberry%20Pi-4-C51A4A.svg)](https://www.raspberrypi.org/)
@@ -35,7 +24,7 @@
 - 🔧 **Modular Design** - Extensible architecture for custom detectors and rules
 - ⚡ **Production Ready** - Systemd service integration and graceful error handling
 
-## � Hardware Requirements
+## 🎯 Hardware Requirements
 
 ### Camera Setup
 - **Position**: Camera must be mounted **directly above the pool table center**
@@ -51,7 +40,7 @@
 
 > ⚠️ **Critical**: Overhead camera positioning is essential for accurate ball tracking and game analysis. Side-angle or tilted cameras will not work correctly.
 
-## �🚀 Quick Start
+## 🚀 Quick Start
 
 ### 🎯 Just Run It (Raspberry Pi)
 
@@ -79,14 +68,6 @@ source .venv/bin/activate
 ```
 
 > **📖 See [scripts/README.md](scripts/README.md) for complete script documentation**
-
-### Hardware Requirements
-
-- **Raspberry Pi 4** (4GB+ recommended)
-- **USB Camera** (1080p or higher)
-- **HDMI Display** (for real-time visualization)
-- **MicroSD Card** (32GB+ Class 10)
-- **4 ArUco Markers** (printable PDF included)
 
 ## 📋 Installation & Usage
 
@@ -135,7 +116,7 @@ source .venv/bin/activate        # Activate Python environment
 ./scripts/deployment/status.sh
 ```
 
-### � Scripts Reference
+### 📋 Scripts Reference
 
 | Command | Purpose | Use Case |
 |---------|---------|----------|
@@ -189,14 +170,6 @@ sudo systemctl restart poolmind
 5. **Automatic rollback** if new version fails to start
 
 > **📖 Advanced deployment:** [scripts/README.md](scripts/README.md)
-
-```bash
-sudo cp scripts/poolmind.service /etc/systemd/system/
-sudo systemctl daemon-reload
-sudo systemctl enable poolmind
-sudo systemctl start poolmind
-```
-```
 
 ## 📐 Configuration
 
@@ -305,7 +278,7 @@ fix: resolve camera bug
 docs: update installation guide
 ```
 
-> **� Development guide:** [.github/copilot-instructions.md](.github/copilot-instructions.md)
+> **🛠️ Development guide:** [.github/copilot-instructions.md](.github/copilot-instructions.md)
 
 ## 🐛 Troubleshooting
 

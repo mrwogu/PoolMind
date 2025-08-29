@@ -67,4 +67,4 @@ sudo systemctl restart poolmind
 
 **That's it! PoolMind will now run 24/7 and update itself automatically.**
 
-📖 **Full documentation:** [README.md](README.md)
+📖 **Full documentation:** [GitHub Repository](https://github.com/mrwogu/PoolMind)

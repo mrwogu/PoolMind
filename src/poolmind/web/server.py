@@ -166,7 +166,13 @@ async def events():
             snapshot_result = hub.snapshot()
             if snapshot_result and len(snapshot_result) >= 3:
                 _, _, evs = snapshot_result
-                return JSONResponse(evs or [])
+                # Sort events by timestamp in descending order (most recent first)
+                if evs:
+                    sorted_events = sorted(
+                        evs, key=lambda x: x.get("ts", 0), reverse=True
+                    )
+                    return JSONResponse(sorted_events)
+                return JSONResponse([])
         except Exception:
             pass
     return JSONResponse([])
@@ -188,7 +194,11 @@ async def frame():
         img, "No camera", (250, 240), cv2.FONT_HERSHEY_SIMPLEX, 1, (255, 255, 255), 2
     )
     _, buf = cv2.imencode(".jpg", img)
-    return Response(content=buf.tobytes(), media_type="image/jpeg")
+    # Handle both numpy array and bytes (for testing)
+    if hasattr(buf, "tobytes"):
+        return Response(content=buf.tobytes(), media_type="image/jpeg")
+    else:
+        return Response(content=buf, media_type="image/jpeg")
 
 
 @app.get("/config")
@@ -224,7 +234,7 @@ async def download_markers():
 @app.post("/game/reset")
 async def reset_game():
     """Reset the current game"""
-    return JSONResponse({"status": "success", "message": "Game reset requested"})
+    return JSONResponse({"status": "game reset", "message": "Game reset requested"})
 
 
 @app.get("/health")
@@ -287,37 +297,35 @@ async def metrics():
                     "# HELP poolmind_camera_connected Camera connection status"
                 )
                 metrics_data.append("# TYPE poolmind_camera_connected gauge")
-                metrics_data.append(
-                    f"poolmind_camera_connected {1 if state.get('camera_connected', False) else 0}"
-                )
+                camera_connected = 1 if state.get("camera_connected", False) else 0
+                metrics_data.append(f"poolmind_camera_connected {camera_connected}")
 
                 # Ball detection metrics
                 metrics_data.append(
                     "# HELP poolmind_balls_detected Total balls currently detected"
                 )
                 metrics_data.append("# TYPE poolmind_balls_detected gauge")
-                metrics_data.append(
-                    f"poolmind_balls_detected {state.get('active_balls', 0)}"
-                )
+                active_balls = state.get("active_balls", 0)
+                metrics_data.append(f"poolmind_balls_detected {active_balls}")
 
                 # Frame processing time
-                metrics_data.append(
-                    "# HELP poolmind_frame_processing_time_seconds Frame processing time"
-                )
+                help_text = "# HELP poolmind_frame_processing_time_seconds Frame processing time"
+                metrics_data.append(help_text)
                 metrics_data.append(
                     "# TYPE poolmind_frame_processing_time_seconds gauge"
                 )
+                processing_time = state.get("processing_time", 0)
                 metrics_data.append(
-                    f"poolmind_frame_processing_time_seconds {state.get('processing_time', 0)}"
+                    f"poolmind_frame_processing_time_seconds {processing_time}"
                 )
 
                 # Detection accuracy
-                metrics_data.append(
-                    "# HELP poolmind_detection_accuracy_percent Detection accuracy percentage"
-                )
+                help_text = "# HELP poolmind_detection_accuracy_percent Detection accuracy percent"
+                metrics_data.append(help_text)
                 metrics_data.append("# TYPE poolmind_detection_accuracy_percent gauge")
+                detection_accuracy = state.get("detection_accuracy", 0)
                 metrics_data.append(
-                    f"poolmind_detection_accuracy_percent {state.get('detection_accuracy', 0)}"
+                    f"poolmind_detection_accuracy_percent {detection_accuracy}"
                 )
 
             # Event metrics
@@ -328,7 +336,8 @@ async def metrics():
                 metrics_data.append("# TYPE poolmind_events_total counter")
                 metrics_data.append(f"poolmind_events_total {len(events)}")
 
-        return Response(content="\n".join(metrics_data) + "\n", media_type="text/plain")
+        content = "\n".join(metrics_data) + "\n"
+        return Response(content=content, media_type="text/plain")
     except Exception as e:
         return Response(
             status_code=500,

@@ -95,10 +95,17 @@ class Overlay:
 
     def draw_pockets(self, out, h_matrix=None):
         # draw pocket hints by projecting canonical pocket centers to original frame
-        pockets = self.table.default_pockets(20)
         if h_matrix is None:
             return
+
+        pockets = self.table.default_pockets(20)
+        if len(pockets) == 0:
+            return
+
         pts = np.array([[x, y] for (x, y, _) in pockets], dtype=np.float32)
+        if len(pts) == 0:
+            return
+
         pts_h = np.hstack([pts, np.ones((len(pts), 1))])
         prj = (h_matrix @ pts_h.T).T
         prj = prj[:, :2] / prj[:, [2]]

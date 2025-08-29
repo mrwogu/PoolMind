@@ -34,7 +34,13 @@ class FrameHub:
             )
             if not ok:
                 return None
-            return bytes(buf)
+            # Handle both numpy array and bytes (for testing compatibility)
+            if hasattr(buf, "tobytes"):
+                return buf.tobytes()
+            elif isinstance(buf, np.ndarray):
+                return buf.astype(np.uint8).tobytes()
+            else:
+                return bytes(buf)
 
     def snapshot(self):
         with self.lock:

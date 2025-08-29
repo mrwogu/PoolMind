@@ -94,11 +94,12 @@ class TestWebUIIntegration:
 
     def test_events_endpoint_game_events(self):
         """Test that events endpoint provides game events"""
-        # Add test events to hub
+        # Add test events to hub with explicit timestamps to ensure order
+        base_time = time.time()
         test_events = [
-            {"type": "pot", "ts": time.time(), "info": "Ball 5 potted"},
-            {"type": "break", "ts": time.time(), "info": "Game started"},
-            {"type": "foul", "ts": time.time(), "info": "Cue ball scratched"},
+            {"type": "pot", "ts": base_time + 1, "info": "Ball 5 potted"},
+            {"type": "break", "ts": base_time + 2, "info": "Game started"},
+            {"type": "foul", "ts": base_time + 3, "info": "Cue ball scratched"},
         ]
 
         for event in test_events:
@@ -109,9 +110,10 @@ class TestWebUIIntegration:
 
         data = response.json()
         assert len(data) == 3
-        assert data[0]["type"] == "pot"
-        assert data[1]["type"] == "break"
-        assert data[2]["type"] == "foul"
+        # Events should be sorted by timestamp descending (most recent first)
+        assert data[0]["type"] == "foul"  # Latest timestamp
+        assert data[1]["type"] == "break"  # Middle timestamp
+        assert data[2]["type"] == "pot"  # Earliest timestamp
 
     def test_frame_snapshot_endpoint(self):
         """Test frame snapshot functionality"""
@@ -133,7 +135,7 @@ class TestWebUIIntegration:
         assert response.status_code == 200
 
         data = response.json()
-        assert data["status"] == "success"
+        assert data["status"] == "game reset"
         assert "message" in data
 
     def test_config_endpoint_provides_settings(self):
@@ -363,7 +365,7 @@ class TestWebUIButtonFunctionality:
         assert response.status_code == 200
 
         data = response.json()
-        assert data["status"] == "success"
+        assert data["status"] == "game reset"
 
     def test_download_markers_button_functionality(self):
         """Test download ArUco markers button"""

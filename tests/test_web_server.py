@@ -73,7 +73,12 @@ class TestWebServer:
         assert response.status_code == 200
 
         data = response.json()
-        assert data == mock_events
+        # Events should be sorted by timestamp descending (most recent first)
+        expected_events = [
+            {"type": "game_start", "ts": 1234567891},
+            {"type": "ball_potted", "ball_id": 5, "ts": 1234567890},
+        ]
+        assert data == expected_events
 
     def test_events_endpoint_no_hub(self):
         """Test events endpoint when hub is None"""

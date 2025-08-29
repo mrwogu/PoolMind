@@ -3,11 +3,10 @@ Tests for PoolMind Web Hub functionality
 """
 import threading
 import time
-from unittest.mock import Mock, patch
+from unittest.mock import patch
 
 import cv2
 import numpy as np
-import pytest
 
 from poolmind.web.hub import FrameHub
 
@@ -76,7 +75,7 @@ class TestFrameHub:
     def test_get_jpeg_success(self, mock_imencode):
         """Test successful JPEG encoding"""
         test_frame = np.zeros((100, 100, 3), dtype=np.uint8)
-        mock_imencode.return_value = (True, np.array([1, 2, 3, 4]))
+        mock_imencode.return_value = (True, np.array([1, 2, 3, 4], dtype=np.uint8))
 
         self.hub.update_frame(test_frame)
         jpeg_data = self.hub.get_jpeg(quality=75)

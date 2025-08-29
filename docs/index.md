@@ -41,20 +41,29 @@ Welcome to the PoolMind documentation! This project provides a complete computer
 ## System Overview
 
 ```mermaid
-graph LR
+graph TD
     A[Overhead USB Camera] --> B[ArUco Calibration]
     B --> C[Ball Detection]
     C --> D[Object Tracking]
     D --> E[Game Engine]
     E --> F[Web Dashboard]
-
-    subgraph "Camera Setup"
-        A --> G[Bird's Eye View]
-        G --> H[Table Coverage]
-    end
-```
-    E --> F[Web Dashboard]
     E --> G[Replay System]
+
+    subgraph "Hardware Setup"
+        A --> H[Bird's Eye View]
+        H --> I[Full Table Coverage]
+    end
+
+    subgraph "Computer Vision Pipeline"
+        B
+        C
+        D
+    end
+
+    subgraph "User Interface"
+        F
+        G
+    end
 ```
 
 ## Hardware Requirements

@@ -123,8 +123,8 @@ fi
 
 # Make setup script executable and run it
 cd /home/pi/PoolMind
-chmod +x scripts/setup-pi.sh
-./scripts/setup-pi.sh
+chmod +x scripts/setup/setup-pi.sh
+./scripts/setup/setup-pi.sh
 EOF
 
 # Get Pi IP for web interface
@@ -137,7 +137,7 @@ info "Web interface: http://$PI_IP:8000"
 echo
 info "SSH commands to manage PoolMind:"
 info "  ssh -p $PI_PORT $PI_USER@$PI_HOST"
-info "  /home/pi/PoolMind/scripts/status.sh"
+info "  /home/pi/PoolMind/scripts/deployment/status.sh"
 info "  /home/pi/PoolMind/scripts/update.sh"
 echo
 info "The system will automatically check for updates every 30 minutes"

@@ -32,8 +32,8 @@ fi
 log "Triggering manual PoolMind update..."
 
 # Run the auto-update script
-if [ -f "/home/pi/PoolMind/scripts/auto-update.sh" ]; then
-    /home/pi/PoolMind/scripts/auto-update.sh
+if [ -f "/home/pi/PoolMind/scripts/deployment/auto-update.sh" ]; then
+    /home/pi/PoolMind/scripts/deployment/auto-update.sh
 else
     error "Auto-update script not found. Please run setup-pi.sh first."
 fi

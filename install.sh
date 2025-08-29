@@ -213,7 +213,7 @@ generate_markers() {
     mkdir -p markers
 
     # Generate markers
-    PYTHONPATH=src python scripts/gen_markers.py --out markers --ids 0 1 2 3 --px 1200 --pdf
+    PYTHONPATH=src python scripts/tools/gen_markers.py --out markers --ids 0 1 2 3 --px 1200 --pdf
 
     deactivate
 
@@ -284,12 +284,12 @@ setup_services() {
     cd "$INSTALL_DIR"
 
     # Make scripts executable
-    chmod +x scripts/*.sh
+    chmod +x scripts/*/*.sh scripts/*.sh
 
     # Copy service files
-    sudo cp scripts/poolmind.service /etc/systemd/system/
-    sudo cp scripts/poolmind-update.service /etc/systemd/system/
-    sudo cp scripts/poolmind-update.timer /etc/systemd/system/
+    sudo cp scripts/systemd/poolmind.service /etc/systemd/system/
+    sudo cp scripts/systemd/poolmind-update.service /etc/systemd/system/
+    sudo cp scripts/systemd/poolmind-update.timer /etc/systemd/system/
 
     # Reload systemd
     sudo systemctl daemon-reload
@@ -337,8 +337,8 @@ show_completion() {
     echo
 
     info "📊 Management commands:"
-    echo "  • Check status:    $INSTALL_DIR/scripts/status.sh"
-    echo "  • Manual update:   $INSTALL_DIR/scripts/update.sh"
+    echo "  • Check status:    $INSTALL_DIR/scripts/deployment/status.sh"
+    echo "  • Manual update:   $INSTALL_DIR/scripts/deployment/update.sh"
     echo "  • View logs:       sudo journalctl -u poolmind -f"
     echo "  • Restart service: sudo systemctl restart poolmind"
     echo

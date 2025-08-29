@@ -113,8 +113,8 @@ deactivate
 
 # Make scripts executable
 log "Setting up scripts..."
-chmod +x scripts/auto-update.sh
-chmod +x scripts/setup-pi.sh
+chmod +x scripts/deployment/auto-update.sh
+chmod +x scripts/setup/setup-pi.sh
 
 # Install systemd services
 log "Installing systemd services..."
@@ -224,7 +224,7 @@ echo
 info "Useful commands:"
 info "  • Check service status: sudo systemctl status $SERVICE_NAME"
 info "  • View logs: sudo journalctl -u $SERVICE_NAME -f"
-info "  • Manual update: /home/pi/PoolMind/scripts/auto-update.sh"
+info "  • Manual update: /home/pi/PoolMind/scripts/deployment/auto-update.sh"
 info "  • Stop service: sudo systemctl stop $SERVICE_NAME"
 info "  • Start service: sudo systemctl start $SERVICE_NAME"
 echo

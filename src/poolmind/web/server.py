@@ -224,7 +224,117 @@ async def download_markers():
 @app.post("/game/reset")
 async def reset_game():
     """Reset the current game"""
-    return JSONResponse({"status": "Game reset requested"})
+    return JSONResponse({"status": "success", "message": "Game reset requested"})
+
+
+@app.get("/health")
+async def health_check():
+    """Health check endpoint for production monitoring"""
+    try:
+        # Check if hub is available and responsive
+        if hub is not None:
+            # Try to get a snapshot to verify hub is working
+            _, state, _ = hub.snapshot()
+            hub_status = "healthy"
+            hub_data = state if state else {}
+        else:
+            hub_status = "no_hub"
+            hub_data = {}
+
+        return JSONResponse(
+            {
+                "status": "healthy",
+                "timestamp": time.time(),
+                "components": {
+                    "web_server": "healthy",
+                    "hub": hub_status,
+                    "last_frame_time": hub_data.get("timestamp", None),
+                },
+                "version": "1.0.0",
+            }
+        )
+    except Exception as e:
+        return JSONResponse(
+            status_code=503,
+            content={
+                "status": "unhealthy",
+                "timestamp": time.time(),
+                "error": str(e),
+                "version": "1.0.0",
+            },
+        )
+
+
+@app.get("/metrics")
+async def metrics():
+    """Prometheus metrics endpoint"""
+    try:
+        metrics_data = []
+
+        # Basic application metrics
+        metrics_data.append(
+            "# HELP poolmind_uptime_seconds Application uptime in seconds"
+        )
+        metrics_data.append("# TYPE poolmind_uptime_seconds counter")
+        metrics_data.append(f"poolmind_uptime_seconds {time.time()}")
+
+        if hub is not None:
+            _, state, events = hub.snapshot()
+
+            if state:
+                # Camera connectivity
+                metrics_data.append(
+                    "# HELP poolmind_camera_connected Camera connection status"
+                )
+                metrics_data.append("# TYPE poolmind_camera_connected gauge")
+                metrics_data.append(
+                    f"poolmind_camera_connected {1 if state.get('camera_connected', False) else 0}"
+                )
+
+                # Ball detection metrics
+                metrics_data.append(
+                    "# HELP poolmind_balls_detected Total balls currently detected"
+                )
+                metrics_data.append("# TYPE poolmind_balls_detected gauge")
+                metrics_data.append(
+                    f"poolmind_balls_detected {state.get('active_balls', 0)}"
+                )
+
+                # Frame processing time
+                metrics_data.append(
+                    "# HELP poolmind_frame_processing_time_seconds Frame processing time"
+                )
+                metrics_data.append(
+                    "# TYPE poolmind_frame_processing_time_seconds gauge"
+                )
+                metrics_data.append(
+                    f"poolmind_frame_processing_time_seconds {state.get('processing_time', 0)}"
+                )
+
+                # Detection accuracy
+                metrics_data.append(
+                    "# HELP poolmind_detection_accuracy_percent Detection accuracy percentage"
+                )
+                metrics_data.append("# TYPE poolmind_detection_accuracy_percent gauge")
+                metrics_data.append(
+                    f"poolmind_detection_accuracy_percent {state.get('detection_accuracy', 0)}"
+                )
+
+            # Event metrics
+            if events:
+                metrics_data.append(
+                    "# HELP poolmind_events_total Total number of game events"
+                )
+                metrics_data.append("# TYPE poolmind_events_total counter")
+                metrics_data.append(f"poolmind_events_total {len(events)}")
+
+        return Response(content="\n".join(metrics_data) + "\n", media_type="text/plain")
+    except Exception as e:
+        return Response(
+            status_code=500,
+            content=f"# Error generating metrics: {str(e)}\n",
+            media_type="text/plain",
+        )
 
 
 def set_hub(hub_instance):

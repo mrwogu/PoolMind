@@ -3,7 +3,7 @@
 ## 🚀 One-Line Installation for Raspberry Pi
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/mrwogu/PoolMind/main/install.sh | bash
+cd ~ && curl -fsSL https://raw.githubusercontent.com/mrwogu/PoolMind/main/install.sh | bash
 ```
 
 ## What happens next?
@@ -34,10 +34,10 @@ curl -fsSL https://raw.githubusercontent.com/mrwogu/PoolMind/main/install.sh | b
 
 ```bash
 # Check status
-~/PoolMind/scripts/status.sh
+./scripts/deployment/status.sh
 
 # Manual update
-~/PoolMind/scripts/update.sh
+./scripts/deployment/update.sh
 
 # View logs
 sudo journalctl -u poolmind -f
@@ -48,23 +48,23 @@ sudo systemctl restart poolmind
 
 ## Features
 
-- 🎥 **Live video stream** with ball tracking
-- 🎯 **Automatic calibration** using ArUco markers
-- 🎱 **Ball detection** with color classification
-- 📊 **Game tracking** with 8-ball rules
-- 🌐 **Web dashboard** with dark/light mode
-- 🔄 **Auto-updates** from GitHub
-- 🚀 **Zero-maintenance** deployment
+- 🎥 Live video stream with ball tracking
+- 🎯 Automatic calibration using ArUco markers
+- 🎱 Ball detection with color classification
+- 📊 Game tracking with 8-ball rules
+- 🌐 Web dashboard with dark/light mode
+- 🔄 Auto-updates from GitHub
+- 🚀 Zero-maintenance deployment
 
 ## Hardware Needed
 
-- Raspberry Pi 4 (4GB+ recommended)
-- USB camera (1080p+)
-- Pool table
-- Printer for ArUco markers
+- **Raspberry Pi 4** (4GB+ recommended)
+- **USB camera** (1080p+) mounted overhead
+- **Pool table**
+- **Printer** for ArUco markers
 
 ---
 
 **That's it! PoolMind will now run 24/7 and update itself automatically.**
 
-📖 Full documentation: https://github.com/mrwogu/PoolMind
+📖 **Full documentation:** [README.md](README.md)

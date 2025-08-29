@@ -5,6 +5,8 @@
 [![OpenCV](https://img.shields.io/badge/OpenCV-4.5+-green.svg)](https://opencv.org/)
 [![FastAPI](https://img.shields.io/badge/FastAPI-0.68+-red.svg)](https://fastapi.tiangolo.com/)
 [![Documentation](https://img.shields.io/badge/docs-GitHub%20Pages-blue)](https://mrwogu.github.io/PoolMind/)
+[![codecov](https://codecov.io/gh/mrwogu/PoolMind/branch/main/graph/badge.svg)](https://codecov.io/gh/mrwogu/PoolMind)
+[![Renovate](https://img.shields.io/badge/renovate-enabled-brightgreen.svg)](https://renovatebot.com/)
 
 **Open-source AI pool assistant for Raspberry Pi with overhead camera computer vision and real-time game analysis.**
 

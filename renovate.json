@@ -10,13 +10,15 @@
     ":automergeMinor",
     "security:openssf-scorecard"
   ],
-  "assignees": ["@me"],
-  "reviewers": ["@me"],
   "labels": ["dependencies", "renovate"],
   "timezone": "Europe/Warsaw",
   "schedule": ["every weekend"],
   "prHourlyLimit": 3,
   "prConcurrentLimit": 8,
+  "automerge": true,
+  "platformAutomerge": true,
+  "automergeType": "pr",
+  "automergeStrategy": "squash",
   "commitMessagePrefix": "⬆️ ",
   "commitMessageAction": "Update",
   "commitMessageTopic": "{{depName}}",
@@ -32,6 +34,19 @@
     "automergeType": "branch"
   },
   "packageRules": [
+    {
+      "description": "Auto-merge safe patch and minor updates",
+      "matchUpdateTypes": ["patch", "minor"],
+      "excludePackageNames": [
+        "opencv-python",
+        "opencv-contrib-python",
+        "tensorflow",
+        "torch",
+        "torchvision"
+      ],
+      "automerge": true,
+      "labels": ["automerge-safe"]
+    },
     {
       "description": "Critical security vulnerabilities - immediate update",
       "matchDatasources": ["pypi"],
@@ -60,7 +75,6 @@
       "schedule": ["before 4am on monday"],
       "automerge": false,
       "labels": ["computer-vision", "ml"],
-      "reviewersFromCodeOwners": true,
       "minimumReleaseAge": "7 days"
     },
     {
@@ -173,7 +187,6 @@
       ],
       "automerge": false,
       "labels": ["raspberry-pi", "hardware-specific"],
-      "reviewersFromCodeOwners": true,
       "minimumReleaseAge": "14 days",
       "prBodyNotes": [
         "⚠️ **Raspberry Pi Compatibility**: This update may affect hardware compatibility.",
@@ -219,7 +232,6 @@
     "enabled": true,
     "schedule": ["at any time"],
     "labels": ["security", "vulnerability"],
-    "reviewersFromCodeOwners": true,
     "automerge": false,
     "prCreation": "immediate"
   },

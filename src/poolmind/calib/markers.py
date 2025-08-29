@@ -21,9 +21,16 @@ class MarkerHomography:
             self.dict = aruco.getPredefinedDictionary(aruco.DICT_4X4_50)
             # Handle both old and new OpenCV ArUco API
             try:
-                self.params = aruco.DetectorParameters_create()  # Old API
-            except AttributeError:
                 self.params = aruco.DetectorParameters()  # New API
+                self.detector = aruco.ArucoDetector(self.dict, self.params)
+                self._use_new_api = True
+            except AttributeError:
+                try:
+                    self.params = aruco.DetectorParameters_create()  # Old API
+                    self._use_new_api = False
+                except AttributeError:
+                    self.params = None
+                    self._use_new_api = False
         self._dst_pts = np.array(
             [
                 [0, 0],
@@ -38,9 +45,14 @@ class MarkerHomography:
         dbg = None
         if _ARUCO_AVAILABLE and self.corner_ids:
             gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
-            corners, ids, _ = aruco.detectMarkers(
-                gray, self.dict, parameters=self.params
-            )
+
+            # Use appropriate API based on what's available
+            if hasattr(self, "_use_new_api") and self._use_new_api:
+                corners, ids, _ = self.detector.detectMarkers(gray)
+            else:
+                # Fallback - return None if old API not available
+                return None, None, None
+
             if ids is not None and len(ids) >= 4:
                 # map id -> center
                 id_to_center = {}

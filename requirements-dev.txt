@@ -22,4 +22,4 @@ responses>=0.23.0
 safety>=2.3.0
 
 # Type stubs
-types-PyYAML>=6.0.0
+types-PyYAML>=6.0.12.20250822

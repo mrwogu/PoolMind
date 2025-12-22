@@ -12,7 +12,7 @@ isort>=5.13.2
 mkdocs>=1.6.1
 mkdocs-material>=9.7.0
 mkdocs-mermaid2-plugin>=1.2.3
-mypy>=1.19.0
+mypy>=1.19.1
 pre-commit>=3.8.0
 # Development dependencies
 pytest>=7.4.4
